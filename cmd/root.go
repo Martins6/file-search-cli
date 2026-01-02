@@ -66,7 +66,7 @@ in your editor.
 
 		if finalModel != nil {
 			if m, ok := finalModel.(ui.Model); ok {
-				if len(m.FilteredEntries()) > 0 {
+				if m.ShouldOpenEditor() && len(m.FilteredEntries()) > 0 {
 					selectedPath := m.FilteredEntries()[m.SelectedIndex()].Path
 					editor.OpenInEditor(selectedPath)
 				}

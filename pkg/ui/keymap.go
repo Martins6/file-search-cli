@@ -17,7 +17,7 @@ func DefaultKeyMap() KeyMap {
 		Enter:      "enter",
 		Left:       "left",
 		OpenEditor: "/e",
-		Quit:       "q",
+		Quit:       "/q",
 		Backspace:  "backspace",
 	}
 }

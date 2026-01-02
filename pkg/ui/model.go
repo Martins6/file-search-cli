@@ -21,6 +21,7 @@ type Model struct {
 	height             int
 	keyMap             KeyMap
 	pendingKeySequence string
+	openEditorOnQuit   bool
 }
 
 type initialModelMsg struct {
@@ -32,14 +33,15 @@ type clearPendingSequenceMsg struct{}
 
 func InitialModel(directory string, showHidden, dirsOnly, filesOnly bool) Model {
 	return Model{
-		directory:     directory,
-		searchQuery:   "",
-		showHidden:    showHidden,
-		dirsOnly:      dirsOnly,
-		filesOnly:     filesOnly,
-		vimMode:       false,
-		selectedIndex: 0,
-		keyMap:        DefaultKeyMap(),
+		directory:        directory,
+		searchQuery:      "",
+		showHidden:       showHidden,
+		dirsOnly:         dirsOnly,
+		filesOnly:        filesOnly,
+		vimMode:          false,
+		selectedIndex:    0,
+		keyMap:           DefaultKeyMap(),
+		openEditorOnQuit: false,
 	}
 }
 
@@ -72,6 +74,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.pendingKeySequence != "" {
 			if msg.String() == "e" && m.pendingKeySequence == "/" {
 				m.pendingKeySequence = ""
+				m.openEditorOnQuit = true
 				if len(m.filteredEntries) > 0 {
 					selectedEntry := m.filteredEntries[m.selectedIndex]
 					return m, func() tea.Msg {
@@ -83,6 +86,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.vimMode = !m.vimMode
 				m.pendingKeySequence = ""
 				return m, nil
+			} else if msg.String() == "q" && m.pendingKeySequence == "/" {
+				m.pendingKeySequence = ""
+				return m, tea.Quit
 			} else {
 				m.searchQuery += m.pendingKeySequence
 				if msg.Type == tea.KeyRunes {
@@ -221,4 +227,8 @@ func (m Model) FilteredEntries() []filesystem.Entry {
 
 func (m Model) SelectedIndex() int {
 	return m.selectedIndex
+}
+
+func (m Model) ShouldOpenEditor() bool {
+	return m.openEditorOnQuit
 }
