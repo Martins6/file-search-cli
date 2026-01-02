@@ -11,3 +11,5 @@ type SelectFileMsg string
 type FilterMsg string
 
 type QuitMsg struct{}
+
+type ToggleHelpMsg struct{}

@@ -9,6 +9,7 @@ type KeyMap struct {
 	PrintPath  string
 	Quit       string
 	Backspace  string
+	ToggleHelp string
 }
 
 func DefaultKeyMap() KeyMap {
@@ -21,5 +22,6 @@ func DefaultKeyMap() KeyMap {
 		PrintPath:  "/p",
 		Quit:       "/q",
 		Backspace:  "backspace",
+		ToggleHelp: "/h",
 	}
 }

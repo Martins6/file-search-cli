@@ -38,6 +38,11 @@ var (
 			Foreground(lipgloss.Color("#6C7086")).
 			Background(lipgloss.Color("#1E1E2E")).
 			Padding(0, 1)
+
+	modalStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#7D56F4")).
+			Padding(1, 2)
 )
 
 func (m Model) View() string {
@@ -79,12 +84,53 @@ func (m Model) View() string {
 
 	var helpText string
 	if m.vimMode {
-		helpText = "↑/k: up | ↓/j: down | ←/h: up | →/l: enter | enter: navigate | /e: open editor | /p: print path | /v: vim mode: on | /q: quit"
+		helpText = "j k h l | /h: help"
 	} else {
-		helpText = "↑: up | ↓: down | ←: up | →: enter | enter: navigate | /e: open editor | /p: print path | /v: vim mode: off | /q: quit"
+		helpText = "↑ ↓ ← → | /h: help"
 	}
 	b.WriteString(helpStyle.Render(helpText))
 	b.WriteString("\n")
 
+	if m.showHelp {
+		return m.renderHelpModal()
+	}
+
 	return b.String()
+}
+
+func (m Model) renderHelpModal() string {
+	var content strings.Builder
+
+	content.WriteString(titleStyle.Render("Help"))
+	content.WriteString("\n\n")
+
+	content.WriteString("Navigation:\n")
+	if m.vimMode {
+		content.WriteString("• j - move down\n")
+		content.WriteString("• k - move up\n")
+		content.WriteString("• h - parent directory\n")
+		content.WriteString("• l - enter directory / select file\n")
+	} else {
+		content.WriteString("• ↑ - move up\n")
+		content.WriteString("• ↓ - move down\n")
+		content.WriteString("• ← - parent directory\n")
+		content.WriteString("• → - enter directory / select file\n")
+	}
+	content.WriteString("\n")
+
+	content.WriteString("Actions:\n")
+	content.WriteString("• enter - navigate to directory / select file\n")
+	content.WriteString("\n")
+
+	content.WriteString("Commands:\n")
+	content.WriteString("• /e - open editor\n")
+	content.WriteString("• /p - print path\n")
+	content.WriteString("• /v - toggle vim mode\n")
+	content.WriteString("• /q - quit\n")
+	content.WriteString("• /h - toggle help\n")
+	content.WriteString("\n")
+
+	content.WriteString(dimStyle.Render("Press esc to close"))
+
+	return modalStyle.Width(60).Align(lipgloss.Left, lipgloss.Top).Render(content.String())
 }

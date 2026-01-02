@@ -26,6 +26,7 @@ type Model struct {
 	selectedFileOnQuit bool
 	printPathOnQuit    bool
 	selectedFilePath   string
+	showHelp           bool
 }
 
 type initialModelMsg struct {
@@ -95,6 +96,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if msg.String() == "q" && m.pendingKeySequence == "/" {
 				m.pendingKeySequence = ""
 				return m, tea.Quit
+			} else if msg.String() == "h" && m.pendingKeySequence == "/" {
+				m.showHelp = !m.showHelp
+				m.pendingKeySequence = ""
+				return m, nil
 			} else if msg.String() == "p" && m.pendingKeySequence == "/" {
 				m.printPathOnQuit = true
 				if len(m.filteredEntries) > 0 {
@@ -117,7 +122,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		switch msg.String() {
-		case m.keyMap.Quit, "ctrl+c", "esc":
+		case "esc":
+			if m.showHelp {
+				m.showHelp = false
+				return m, nil
+			}
+			return m, tea.Quit
+		case m.keyMap.Quit, "ctrl+c":
 			return m, tea.Quit
 		case m.keyMap.Up:
 			if len(m.filteredEntries) > 0 && m.selectedIndex > 0 {
