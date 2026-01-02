@@ -1,0 +1,46 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Compile fsc binary to bin/fsc
+    cmds:
+      - mkdir -p bin
+      - go build -o bin/fsc .
+    sources:
+      - "**/*.go"
+      - go.mod
+      - go.sum
+    generates:
+      - bin/fsc
+
+  install:
+    desc: Install to GOBIN or GOPATH/bin using go install
+    cmds:
+      - go install .
+
+  clean:
+    desc: Remove bin/ directory
+    cmds:
+      - rm -rf bin
+
+  run:
+    desc: Build and execute for testing
+    cmds:
+      - task: build
+      - ./bin/fsc
+
+  deps:
+    desc: Download dependencies
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  test:
+    desc: Run all tests
+    cmds:
+      - go test ./...
+
+  default:
+    desc: List all tasks
+    cmds:
+      - task --list
