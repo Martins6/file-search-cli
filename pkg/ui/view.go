@@ -78,9 +78,9 @@ func (m Model) View() string {
 
 	var helpText string
 	if m.vimMode {
-		helpText = "↑/k: up | ↓/j: down | ←/h: up | →/l: enter | enter: navigate | /e: open editor | /v: vim mode: on | /q: quit"
+		helpText = "↑/k: up | ↓/j: down | ←/h: up | →/l: enter | enter: navigate | /e: open editor | /p: print path | /v: vim mode: on | /q: quit"
 	} else {
-		helpText = "↑: up | ↓: down | ←: up | →: enter | enter: navigate | /e: open editor | /v: vim mode: off | /q: quit"
+		helpText = "↑: up | ↓: down | ←: up | →: enter | enter: navigate | /e: open editor | /p: print path | /v: vim mode: off | /q: quit"
 	}
 	b.WriteString(helpStyle.Render(helpText))
 	b.WriteString("\n")

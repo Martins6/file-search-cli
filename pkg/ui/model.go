@@ -23,6 +23,7 @@ type Model struct {
 	pendingKeySequence string
 	openEditorOnQuit   bool
 	selectedFileOnQuit bool
+	printPathOnQuit    bool
 	selectedFilePath   string
 }
 
@@ -93,6 +94,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if msg.String() == "q" && m.pendingKeySequence == "/" {
 				m.pendingKeySequence = ""
 				return m, tea.Quit
+			} else if msg.String() == "p" && m.pendingKeySequence == "/" {
+				m.printPathOnQuit = true
+				if len(m.filteredEntries) > 0 {
+					m.selectedFilePath = m.filteredEntries[m.selectedIndex].Path
+				} else {
+					m.selectedFilePath = m.directory
+				}
+				m.pendingKeySequence = ""
+				return m, tea.Quit
 			} else {
 				m.searchQuery += m.pendingKeySequence
 				if msg.Type == tea.KeyRunes {
@@ -117,6 +127,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.selectedIndex++
 			}
 		case m.keyMap.Enter, "right":
+			if len(m.filteredEntries) == 0 {
+				m.selectedFileOnQuit = true
+				m.selectedFilePath = m.directory
+				return m, tea.Quit
+			}
 			if len(m.filteredEntries) > 0 {
 				selectedEntry := m.filteredEntries[m.selectedIndex]
 				if selectedEntry.IsDir {
@@ -162,6 +177,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.selectedIndex++
 				}
 			case "l":
+				if len(m.filteredEntries) == 0 {
+					m.selectedFileOnQuit = true
+					m.selectedFilePath = m.directory
+					return m, tea.Quit
+				}
 				if len(m.filteredEntries) > 0 {
 					selectedEntry := m.filteredEntries[m.selectedIndex]
 					if selectedEntry.IsDir {
@@ -247,6 +267,10 @@ func (m Model) ShouldOpenEditor() bool {
 
 func (m Model) HasSelectedFile() bool {
 	return m.selectedFileOnQuit
+}
+
+func (m Model) ShouldPrintPath() bool {
+	return m.printPathOnQuit
 }
 
 func (m Model) SelectedFilePath() string {

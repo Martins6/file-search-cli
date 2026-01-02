@@ -73,6 +73,9 @@ in your editor.
 				if m.HasSelectedFile() {
 					fmt.Println(m.SelectedFilePath())
 				}
+				if m.ShouldPrintPath() {
+					fmt.Println(m.SelectedFilePath())
+				}
 			}
 		}
 	},

@@ -6,6 +6,7 @@ type KeyMap struct {
 	Enter      string
 	Left       string
 	OpenEditor string
+	PrintPath  string
 	Quit       string
 	Backspace  string
 }
@@ -17,6 +18,7 @@ func DefaultKeyMap() KeyMap {
 		Enter:      "enter",
 		Left:       "left",
 		OpenEditor: "/e",
+		PrintPath:  "/p",
 		Quit:       "/q",
 		Backspace:  "backspace",
 	}
