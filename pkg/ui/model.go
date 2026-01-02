@@ -69,6 +69,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 			}
+		case m.keyMap.Left, "h":
+			return m, func() tea.Msg {
+				_, parentPath, _ := filesystem.NavigateUp(m.directory)
+				return NavigateMsg(parentPath)
+			}
 		case m.keyMap.OpenEditor:
 			if len(m.filteredEntries) > 0 {
 				selectedEntry := m.filteredEntries[m.selectedIndex]

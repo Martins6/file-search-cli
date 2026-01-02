@@ -76,7 +76,7 @@ func (m Model) View() string {
 	b.WriteString(filterStyle.Render("Filter: " + m.searchQuery + "_"))
 	b.WriteString("\n")
 
-	helpText := "↑/j: up | ↓/k: down | enter: navigate | e: open editor | q: quit"
+	helpText := "←/h: up | ↑/j: down | ↓/k: down | enter: navigate | e: open editor | q: quit"
 	b.WriteString(helpStyle.Render(helpText))
 	b.WriteString("\n")
 

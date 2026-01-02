@@ -2,16 +2,20 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
 	"fsc/pkg/editor"
 	"fsc/pkg/ui"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"os"
 )
 
-var showHidden bool
-var dirsOnly bool
-var filesOnly bool
+var (
+	showHidden bool
+	dirsOnly   bool
+	filesOnly  bool
+)
 
 var rootCmd = &cobra.Command{
 	Use:   "fsc [directory]",
