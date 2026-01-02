@@ -79,7 +79,13 @@ func (m Model) View() string {
 	}
 
 	b.WriteString("\n")
-	b.WriteString(filterStyle.Render("Filter: " + m.searchQuery + "_"))
+	var filterLabel string
+	if m.regexMode {
+		filterLabel = "Filter (Regex): "
+	} else {
+		filterLabel = "Filter: "
+	}
+	b.WriteString(filterStyle.Render(filterLabel + m.searchQuery + "_"))
 	b.WriteString("\n")
 
 	var helpText string
@@ -125,6 +131,7 @@ func (m Model) renderHelpModal() string {
 	content.WriteString("Commands:\n")
 	content.WriteString("• /e - open editor\n")
 	content.WriteString("• /p - print path\n")
+	content.WriteString("• /r - toggle regex mode\n")
 	content.WriteString("• /v - toggle vim mode\n")
 	content.WriteString("• /q - quit\n")
 	content.WriteString("• /h - toggle help\n")

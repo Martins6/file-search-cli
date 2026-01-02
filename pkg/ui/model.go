@@ -18,6 +18,7 @@ type Model struct {
 	dirsOnly           bool
 	filesOnly          bool
 	vimMode            bool
+	regexMode          bool
 	width              int
 	height             int
 	keyMap             KeyMap
@@ -98,6 +99,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, tea.Quit
 			} else if msg.String() == "h" && m.pendingKeySequence == "/" {
 				m.showHelp = !m.showHelp
+				m.pendingKeySequence = ""
+				return m, nil
+			} else if msg.String() == "r" && m.pendingKeySequence == "/" {
+				m.regexMode = !m.regexMode
+				m.searchQuery = ""
+				m.filteredEntries = m.filterEntries()
+				m.selectedIndex = 0
 				m.pendingKeySequence = ""
 				return m, nil
 			} else if msg.String() == "p" && m.pendingKeySequence == "/" {
@@ -260,7 +268,7 @@ func (m Model) filterEntries() []filesystem.Entry {
 
 	filtered = filesystem.FilterByType(filtered, m.dirsOnly, m.filesOnly)
 
-	filtered = filesystem.FilterByPattern(filtered, m.searchQuery)
+	filtered = filesystem.FilterByPattern(filtered, m.searchQuery, m.regexMode)
 
 	return filtered
 }

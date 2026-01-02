@@ -6,16 +6,15 @@ import (
 	"strings"
 )
 
-func FilterByPattern(entries []Entry, pattern string) []Entry {
+func FilterByPattern(entries []Entry, pattern string, regexMode bool) []Entry {
 	if pattern == "" {
 		return entries
 	}
 
 	var result []Entry
 
-	if strings.HasPrefix(pattern, "/") {
-		regexStr := strings.TrimPrefix(pattern, "/")
-		re, err := regexp.Compile(regexStr)
+	if regexMode {
+		re, err := regexp.Compile(pattern)
 		if err != nil {
 			return entries
 		}
@@ -27,7 +26,7 @@ func FilterByPattern(entries []Entry, pattern string) []Entry {
 	} else {
 		lowerPattern := strings.ToLower(pattern)
 		for _, entry := range entries {
-			if strings.Contains(strings.ToLower(entry.Name), lowerPattern) {
+			if strings.HasPrefix(strings.ToLower(entry.Name), lowerPattern) {
 				result = append(result, entry)
 			}
 		}
