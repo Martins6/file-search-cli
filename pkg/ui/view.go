@@ -76,7 +76,12 @@ func (m Model) View() string {
 	b.WriteString(filterStyle.Render("Filter: " + m.searchQuery + "_"))
 	b.WriteString("\n")
 
-	helpText := "←/h: up | ↑/j: down | ↓/k: down | enter: navigate | e: open editor | q: quit"
+	var helpText string
+	if m.vimMode {
+		helpText = "↑/k: up | ↓/j: down | ←/h: up | →/l: enter | enter: navigate | /e: open editor | /v: vim mode: on | q: quit"
+	} else {
+		helpText = "↑: up | ↓: down | ←: up | →: enter | enter: navigate | /e: open editor | /v: vim mode: off | q: quit"
+	}
 	b.WriteString(helpStyle.Render(helpText))
 	b.WriteString("\n")
 
