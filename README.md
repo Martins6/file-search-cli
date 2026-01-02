@@ -13,27 +13,29 @@ A Finder-like CLI tool for interactive file browsing in the terminal.
 ## Prerequisites
 
 - Go 1.21 or later
-- Task runner (<https://taskfile.dev/>)
+- [Go Task](https://taskfile.dev/)
+  - macOS: `brew install go-task/tap/go-task`
+  - Linux/Other: `sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d`
 
 ## Installation
 
 ### Build from source
 
+The recommended way to install `fsc` is by building from source using `task`.
+
 ```bash
 # Clone the repository
-cd /path/to/file-search-cli
+git clone https://github.com/yourusername/fsc.git
+cd fsc
 
-# Download dependencies
-task deps
+# Install system-wide to /usr/local/bin or ~/.local/bin
+task install-local
 
-# Build the binary
-task build
-
-# Install to GOBIN or GOPATH/bin
+# Alternatively, install to GOBIN or GOPATH/bin (for Go developers)
 task install
 ```
 
-### Manual installation
+### Manual installation (Go only)
 
 ```bash
 go install ./...

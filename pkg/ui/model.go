@@ -1,8 +1,9 @@
 package ui
 
 import (
-	"fsc/pkg/filesystem"
 	"time"
+
+	"fsc/pkg/filesystem"
 
 	tea "github.com/charmbracelet/bubbletea"
 )

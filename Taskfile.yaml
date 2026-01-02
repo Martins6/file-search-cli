@@ -18,6 +18,30 @@ tasks:
     cmds:
       - go install .
 
+  install-local:
+    desc: Build and install binary to ~/.local/bin or /usr/local/bin
+    cmds:
+      - task: build
+      - |
+        if [ -d "$HOME/.local/bin" ] || mkdir -p "$HOME/.local/bin" 2>/dev/null; then
+          INSTALL_DIR="$HOME/.local/bin"
+        elif [ -w /usr/local/bin ]; then
+          INSTALL_DIR="/usr/local/bin"
+        else
+          echo "Error: Could not find or create a writable installation directory."
+          echo "Please ensure $HOME/.local/bin or /usr/local/bin is writable."
+          exit 1
+        fi
+        
+        cp bin/fsc "$INSTALL_DIR/fsc"
+        chmod +x "$INSTALL_DIR/fsc"
+        
+        echo "fsc installed to $INSTALL_DIR/fsc"
+        if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
+          echo "Add $INSTALL_DIR to your PATH to run 'fsc' from anywhere:"
+          echo "  export PATH=\"\$PATH:$INSTALL_DIR\""
+        fi
+
   clean:
     desc: Remove bin/ directory
     cmds:
