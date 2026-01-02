@@ -22,6 +22,8 @@ type Model struct {
 	keyMap             KeyMap
 	pendingKeySequence string
 	openEditorOnQuit   bool
+	selectedFileOnQuit bool
+	selectedFilePath   string
 }
 
 type initialModelMsg struct {
@@ -33,15 +35,17 @@ type clearPendingSequenceMsg struct{}
 
 func InitialModel(directory string, showHidden, dirsOnly, filesOnly bool) Model {
 	return Model{
-		directory:        directory,
-		searchQuery:      "",
-		showHidden:       showHidden,
-		dirsOnly:         dirsOnly,
-		filesOnly:        filesOnly,
-		vimMode:          false,
-		selectedIndex:    0,
-		keyMap:           DefaultKeyMap(),
-		openEditorOnQuit: false,
+		directory:          directory,
+		searchQuery:        "",
+		showHidden:         showHidden,
+		dirsOnly:           dirsOnly,
+		filesOnly:          filesOnly,
+		vimMode:            false,
+		selectedIndex:      0,
+		keyMap:             DefaultKeyMap(),
+		openEditorOnQuit:   false,
+		selectedFileOnQuit: false,
+		selectedFilePath:   "",
 	}
 }
 
@@ -120,6 +124,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, func() tea.Msg {
 						return NavigateMsg(selectedEntry.Path)
 					}
+				} else {
+					m.selectedFileOnQuit = true
+					m.selectedFilePath = selectedEntry.Path
+					return m, tea.Quit
 				}
 			}
 		case m.keyMap.Left:
@@ -161,6 +169,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						return m, func() tea.Msg {
 							return NavigateMsg(selectedEntry.Path)
 						}
+					} else {
+						m.selectedFileOnQuit = true
+						m.selectedFilePath = selectedEntry.Path
+						return m, tea.Quit
 					}
 				}
 			case "h":
@@ -231,4 +243,12 @@ func (m Model) SelectedIndex() int {
 
 func (m Model) ShouldOpenEditor() bool {
 	return m.openEditorOnQuit
+}
+
+func (m Model) HasSelectedFile() bool {
+	return m.selectedFileOnQuit
+}
+
+func (m Model) SelectedFilePath() string {
+	return m.selectedFilePath
 }

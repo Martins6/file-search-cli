@@ -70,6 +70,9 @@ in your editor.
 					selectedPath := m.FilteredEntries()[m.SelectedIndex()].Path
 					editor.OpenInEditor(selectedPath)
 				}
+				if m.HasSelectedFile() {
+					fmt.Println(m.SelectedFilePath())
+				}
 			}
 		}
 	},
